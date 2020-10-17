@@ -1,23 +1,23 @@
 fun main() {
-    val string = getString("Enter cells: ")
-    var cells = string.chunked(3)
-    //val xCount = string.count { it == 'X' }
-    //val oCount = string.count { it == 'O' }
-    //val xWins = checkWin(cells, 'X')
-    //val oWins = checkWin(cells, 'O')
-    //val empty = string.contains('_')
+    var cells = listOf("___", "___", "___")
+    val xWins = { checkWin(cells, 'X') }
+    val oWins = { checkWin(cells, 'O') }
+    val empty = { cells.joinToString("").contains('_') }
+    var letter = 'X'
+
+    do {
+        printGame(cells)
+        cells = getCell(cells.toMutableList(), letter)
+        letter = if (letter == 'X') 'O' else 'X'
+    } while (!xWins() && !oWins() && empty())
 
     printGame(cells)
-    cells = getCell(cells.toMutableList(), 'X')
-    printGame(cells)
 
-//    when {
-//        ((xWins && oWins) || (xCount - oCount).absoluteValue > 1) -> println("Impossible")
-//        xWins -> println("X wins")
-//        oWins -> println("O wins")
-//        empty -> println("Game not finished")
-//        else -> println("Draw")
-//    }
+    when {
+        xWins() -> println("X wins")
+        oWins() -> println("O wins")
+        else -> println("Draw")
+    }
 }
 
 fun getCell(cells: MutableList<String>, char: Char): List<String> {
@@ -52,13 +52,13 @@ fun printGame(cells: List<String>) {
     println(dashes)
 }
 
-//fun checkWin(cells: List<String>, check: Char): Boolean {
-//    cells.forEach { line -> if (line.all { it == check }) return true }
-//    for (i in cells.indices) if (cells[0][i] == check && cells[1][i] == check && cells[2][i] == check) return true
-//    if (cells[0][0] == check && cells[1][1] == check && cells[2][2] == check) return true
-//    if (cells[0][2] == check && cells[1][1] == check && cells[2][0] == check) return true
-//    return false
-//}
+fun checkWin(cells: List<String>, check: Char): Boolean {
+    cells.forEach { line -> if (line.all { it == check }) return true }
+    for (i in cells.indices) if (cells[0][i] == check && cells[1][i] == check && cells[2][i] == check) return true
+    if (cells[0][0] == check && cells[1][1] == check && cells[2][2] == check) return true
+    if (cells[0][2] == check && cells[1][1] == check && cells[2][0] == check) return true
+    return false
+}
 
 fun getString(text: String): String {
     print(text)
